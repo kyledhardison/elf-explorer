@@ -67,7 +67,7 @@ for n, p in pos.items():
 edge_trace = go.Scatter(
     x=[],
     y=[],
-    line=dict(width=1, color='#888'),
+    line=dict(width=2, color='#888'),
     hoverinfo='none',
     mode='lines')
 for edge in G.edges():
@@ -135,9 +135,16 @@ fig = go.Figure(data=[edge_trace, node_trace],
                 hovermode='closest',
                 margin=dict(b=21, l=5, r=5, t=40),  # plot margins
                 annotations=[dict(
-                    text="",
-                    showarrow=False,
-                    xref="paper", yref="paper")],
+                    ax=(G.nodes[edge[0]]['pos'][0] + G.nodes[edge[1]]['pos'][0]) / 2,
+                    ay=(G.nodes[edge[0]]['pos'][1] + G.nodes[edge[1]]['pos'][1]) / 2, axref='x', ayref='y',
+                    x=(G.nodes[edge[1]]['pos'][0] * 3 + G.nodes[edge[0]]['pos'][0]) / 4,
+                    y=(G.nodes[edge[1]]['pos'][1] * 3 + G.nodes[edge[0]]['pos'][1]) / 4, xref='x', yref='y',
+                    showarrow=True,
+                    arrowhead=2,
+                    arrowsize=2,
+                    arrowwidth=1,
+                    opacity=1
+                    ) for edge in G.edges],
                 xaxis=dict(showgrid=False, zeroline=False,
                            showticklabels=False, mirror=True),
                 yaxis=dict(showgrid=False, zeroline=False, showticklabels=False, mirror=True)))
@@ -166,12 +173,7 @@ app.layout = dbc.Container(fluid=True,
                                            children=[
                                                html.H2("Symbol Definition"),
                                                dcc.Markdown(id='click-data')
-                                           ]  # ,
-                                           # style={'height': '300px',
-                                           # 'width': '70vh'}
-                                           # 'border-style': 'inset',
-                                           # 'overflow-x': 'scroll',
-                                           # 'overflow-y': 'scroll'}
+                                           ]
                                        ),
                                        width=6,
                                        style={'textAlign': 'center'}
@@ -182,12 +184,7 @@ app.layout = dbc.Container(fluid=True,
                                            children=[
                                                html.H2("Symbol Section"),
                                                dcc.Markdown(id='symbol-data')
-                                           ]  # ,
-                                           # style={'height': '300px',
-                                           # 'width': '70vh'}
-                                           # 'border-style': 'inset',
-                                           # 'overflow-x': 'scroll',
-                                           # 'overflow-y': 'scroll'}
+                                           ]
                                        ),
                                        width=6,
                                        style={'textAlign': 'center'}
