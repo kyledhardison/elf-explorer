@@ -9,16 +9,25 @@ import plotly.graph_objs as go
 import sys
 from textwrap import dedent
 import json
+import argparse
 
+p = argparse.ArgumentParser()
+p.add_argument('infile')
+args = p.parse_args()
+
+ir = gtirb.IR.load_protobuf(args.infile)
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.title = "ELF Explorer"
 
 symdb = {}
+sectiondb = {}
 with open('./symdb/symdb.json', 'r') as f:
     symdb = json.load(f)
 
-ir = gtirb.IR.load_protobuf('test.gtirb')
+with open('./symdb/sectiondb.json', 'r') as f:
+    sectiondb = json.load(f)
+
 G_orig = ir.cfg.nx()
 
 relabel = {}
@@ -171,9 +180,8 @@ app.layout = dbc.Container(fluid=True,
                                    dbc.Col(
                                        html.Div(
                                            children=[
-                                               html.H2("Second Definition"),
-                                               dcc.Markdown(
-                                                   "lol\nlol\n", id='second-data')
+                                               html.H2("Symbol Section"),
+                                               dcc.Markdown(id='symbol-data')
                                            ]  # ,
                                            # style={'height': '300px',
                                            # 'width': '70vh'}
@@ -188,19 +196,22 @@ app.layout = dbc.Container(fluid=True,
                            ])
 
 
-# Click callback
-# https://dash.plotly.com/basic-callbacks
+# Node Click callback
 @app.callback(
     dash.dependencies.Output('click-data', 'children'),
     [dash.dependencies.Input('example-graph', 'clickData')])
-def display_click_data(clickData):
+def display_sym_def(clickData):
+    node = ""
     if not clickData:
         return ""
     try:
         node = clickData["points"][0]["text"]
         details = symdb[node]
     except KeyError:
-        return f"{node} Not Found"
+        if not node:
+            return "Symbol Not Found"
+        else:
+            return f"{node} Not Found"
     return f"""**{node}**: \n
 {details[0]}
 
@@ -208,6 +219,33 @@ def display_click_data(clickData):
 
 {details[2]}"""
 
+@app.callback(
+    dash.dependencies.Output('symbol-data', 'children'),
+    [dash.dependencies.Input('example-graph', 'clickData')])
+def display_sym_data(clickData):
+    ref = None
+    section = ""
+    sectiondata = ""
+    datatype = ""
+    node = ""
+
+    if not clickData:
+        return ""
+    try:
+        node = clickData["points"][0]["text"]
+        ref = revd[node]
+        datatype = type(ref).__name__
+        if datatype == "CodeBlock" or datatype == "DataBlock":
+            section = ref.section.name
+            sectiondata = sectiondb.get(section)
+        else:
+            sectiondata = "This is an external symbol. External symbols exist in another library, and their exact location is resolved at runtime by the linker."
+    except KeyError:
+        return "Symbol Info Not Found"
+    if not section:
+        section = "External Symbol"
+    return f"**{section}** \n\n {sectiondata}"
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server()
+

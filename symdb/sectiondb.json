@@ -1,0 +1,46 @@
+{
+    ".bss":
+    "The .bss section contains uninitialized read-write data.",
+
+    ".comment":
+    "The .comment section contains comments.",
+
+    ".data": 
+    "The .data section contains initialized read-write data.",
+
+    ".data1":
+    "The .data1 section contains initialized read-write data.",
+
+    ".debug":
+    "The .debug section contains debugging information.",
+
+    ".fini":
+    "The .fini section contains runtime finalization instructions.",
+
+    ".init":
+    "The .init section contains runtime initialization instructions.",
+
+    ".rodata":
+    "The .rodata section contains read-only data.",
+
+    ".rodata1":
+    "The .rodata1 section contains read-only data.",
+
+    ".text":
+    "The .text section contains executable text, i.e. assembly code that is executed at runtime.",
+
+    ".line":
+    "The .line section contains line # info for symbolic debugging.",
+
+    ".note":
+    "The .note section contains note information.",
+
+    ".plt":
+    "The .plt section (Procedure Linkage Table) is used to call external functions whose addresses aren't known at the time of linking. The dynamic linker resolves these function calls at run time.",
+
+    ".rela.plt":
+    "The .rela.plt section (Procedure Linkage Table) is used to call external functions whose addresses aren't known at the time of linking. The dynamic linker resolves these function calls at run time.",
+
+    ".got":
+    "The .got section (Global Offset Table) is used to call external functions whose addresses aren't known at the time of linking. The dynamic linker resolves these function calls at run time."
+}
