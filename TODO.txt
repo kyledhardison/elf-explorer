@@ -1,0 +1,13 @@
+
+Add interaction - integrate with dash
+    Side panels w/ symbol data
+
+Colors based on symbol reference type
+    Needs legend
+
+Function labeling - auxdata
+
+Popup with disassembly would be cool 
+    Radare w/ byte arrays
+    Objdump can do this https://stackoverflow.com/questions/14290879/disassembling-a-flat-binary-file-using-objdump
+    objdump -D -Mintel,x86-64 -b binary -m i386 foo.bin
